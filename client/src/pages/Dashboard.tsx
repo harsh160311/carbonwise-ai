@@ -43,24 +43,25 @@ export function Dashboard() {
             Calculate your carbon footprint first to see your personalized
             dashboard with charts, trends, and your sustainability score.
           </p>
-          <Link to="/calculator">
-            <Button size="lg">
-              Calculate Your Footprint
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </Button>
+          <Link
+            to="/calculator"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-medium text-white shadow-sm transition-all duration-200 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          >
+            Calculate Your Footprint
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
           </Link>
         </div>
       </div>
@@ -108,10 +109,11 @@ export function Dashboard() {
               Update your data to see how your changes affect your score.
             </p>
           </div>
-          <Link to="/simulator">
-            <Button variant="outline">
-              Try the Simulator
-            </Button>
+          <Link
+            to="/simulator"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-emerald-500 bg-transparent px-4 py-2 text-sm font-medium text-emerald-600 transition-all duration-200 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          >
+            Try the Simulator
           </Link>
         </div>
       </Card>
