@@ -5,7 +5,6 @@ import { SustainabilityScoreCard } from '../components/dashboard/SustainabilityS
 import { WeeklyTrend } from '../components/dashboard/WeeklyTrend';
 import { MonthlyTrend } from '../components/dashboard/MonthlyTrend';
 import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
 
 export function Dashboard() {
