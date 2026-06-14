@@ -5,7 +5,7 @@ import { SustainabilityScoreCard } from '../components/dashboard/SustainabilityS
 import { WeeklyTrend } from '../components/dashboard/WeeklyTrend';
 import { MonthlyTrend } from '../components/dashboard/MonthlyTrend';
 import { Card } from '../components/ui/Card';
-import { Link } from 'react-router-dom';
+
 
 export function Dashboard() {
   const {
@@ -42,8 +42,8 @@ export function Dashboard() {
             Calculate your carbon footprint first to see your personalized
             dashboard with charts, trends, and your sustainability score.
           </p>
-          <Link
-            to="/calculator"
+          <a
+            href="/calculator"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-medium text-white shadow-sm transition-all duration-200 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           >
             Calculate Your Footprint
@@ -61,7 +61,7 @@ export function Dashboard() {
                 d="M13 7l5 5m0 0l-5 5m5-5H6"
               />
             </svg>
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -108,12 +108,12 @@ export function Dashboard() {
               Update your data to see how your changes affect your score.
             </p>
           </div>
-          <Link
-            to="/simulator"
+          <a
+            href="/simulator"
             className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-emerald-500 bg-transparent px-4 py-2 text-sm font-medium text-emerald-600 transition-all duration-200 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           >
             Try the Simulator
-          </Link>
+          </a>
         </div>
       </Card>
     </div>

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 
 const features = [
@@ -78,21 +77,21 @@ export function Landing() {
               and gamified challenges.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                to="/calculator"
+              <a
+                href="/calculator"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-medium text-white shadow-sm transition-all duration-200 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
                 Calculate Your Footprint
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </Link>
-              <Link
-                to="/ai-coach"
+              </a>
+              <a
+                href="/ai-coach"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-emerald-500 bg-transparent px-6 py-3 text-base font-medium text-emerald-600 transition-all duration-200 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
                 Talk to AI Coach
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -154,12 +153,12 @@ export function Landing() {
             Start your sustainability journey today. Calculate your footprint
             and get personalized recommendations.
           </p>
-          <Link
-            to="/calculator"
+          <a
+            href="/calculator"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-medium text-emerald-700 shadow-sm transition-all duration-200 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           >
             Get Started Now
-          </Link>
+          </a>
         </div>
       </section>
     </div>

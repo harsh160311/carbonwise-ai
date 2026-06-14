@@ -9,7 +9,6 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { calculateCarbonFootprint } from '../utils/calculations';
 import { useCarbonData } from '../hooks/useCarbonData';
-import { Link } from 'react-router-dom';
 
 const initialInput: CarbonInput = {
   transportation: { carDistance: 0, bikeDistance: 0, busDistance: 0, trainDistance: 0 },
@@ -155,16 +154,18 @@ export function Calculator() {
           <CalculatorResults result={result} />
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            <Link to="/dashboard" className="flex-1">
-              <Button className="w-full">
-                View Dashboard
-              </Button>
-            </Link>
-            <Link to="/ai-coach" className="flex-1">
-              <Button variant="outline" className="w-full">
-                Get AI Recommendations
-              </Button>
-            </Link>
+            <a
+              href="/dashboard"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            >
+              View Dashboard
+            </a>
+            <a
+              href="/ai-coach"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-emerald-500 bg-transparent px-4 py-2 text-sm font-medium text-emerald-600 transition-all duration-200 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            >
+              Get AI Recommendations
+            </a>
             <Button
               variant="ghost"
               onClick={() => {
