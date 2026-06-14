@@ -14,7 +14,16 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://carbonwise-ai-ashy.vercel.app',
+  'https://carbonwise-ai-git-main-harsh160311s-projects.vercel.app',
+  'http://localhost:5173',
+].filter(Boolean) as string[];
+
+app.use(cors({
+  origin: allowedOrigins,
+}));
 app.use(express.json({ limit: '10kb' }));
 
 const limiter = rateLimit({
