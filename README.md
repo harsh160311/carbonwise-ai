@@ -338,3 +338,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 Built with ❤️ for a sustainable future.
+
+---
+
+*Deployed on Vercel + Render*
