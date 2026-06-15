@@ -35,5 +35,5 @@ export function getScoreCategory(score: number): {
 }
 
 export function getScoreExplanation(score: number): string {
-  return `Your Sustainability Score of ${score}/100 is calculated by comparing your monthly carbon emissions against a sustainable target of 500 kg CO₂/month. The score considers both your monthly total (60% weight) and weekly average (40% weight). A higher score means lower environmental impact.`;
+  return `Your Sustainability Score of ${score}/100 compares your monthly carbon footprint against Indian average (167 kg), global average (250 kg), and a sustainable target (83 kg). A higher score means lower environmental impact.`;
 }

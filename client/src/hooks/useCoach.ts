@@ -7,7 +7,7 @@ export function useCoach() {
     {
       role: 'assistant',
       content:
-        'Hello! I am your CarbonWise AI Sustainability Coach. Ask me about reducing your carbon footprint, understanding your impact, or getting personalized eco-tips!',
+        'Namaste! Main hoon aapka CarbonWise AI Sustainability Coach. Mujhse poochhiye carbon footprint kam karne ke tips, apna impact samajhne, ya personalized eco-suggestions ke liye!',
       timestamp: new Date(),
     },
   ]);

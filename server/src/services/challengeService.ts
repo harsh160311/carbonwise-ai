@@ -182,7 +182,8 @@ function loadChallenges(): Challenge[] {
       const raw = readFileSync(DATA_FILE, 'utf-8');
       return JSON.parse(raw);
     }
-  } catch {
+  } catch (err) {
+    console.error('Failed to load challenges:', err);
   }
   return [];
 }
@@ -193,7 +194,8 @@ function saveChallenges(data: Challenge[]): void {
       mkdirSync(DATA_DIR, { recursive: true });
     }
     writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  } catch {
+  } catch (err) {
+    console.error('Failed to save challenges:', err);
   }
 }
 

@@ -1,13 +1,23 @@
 import { CarbonInput, Recommendation } from '../types/index.js';
 import { calculateCarbonFootprint, getScoreBenchmarks } from '../utils/calculations.js';
 
+interface OpenRouterResponse {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+  }>;
+}
+
 const SYSTEM_PROMPT = `You are CarbonWise AI, a friendly sustainability coach. Help users understand and reduce their carbon footprint.
 
-CRITICAL: Always reply in the EXACT SAME language/style as the user's message.
-- If user writes in Hindi/Devanagari → reply in Hindi/Devanagari
-- If user writes in Roman Hinglish (e.g. "energy kaise kam karein") → reply in Roman Hinglish
-- If user writes in English → reply in English
-- If user mixes Hinglish → reply in Hinglish (Roman script)
+CRITICAL: Always reply in HINGLISH (Roman script - mix of Hindi and English).
+- Write in Roman script only (no Devanagari/Hindi script)
+- Mix Hindi and English naturally — Hinglish style
+- For example: "Aap apni electricity usage kam kar sakte hain LED bulbs use karke"
+- Even if user writes in pure English, still reply in Hinglish
+- Even if user writes in Devanagari Hindi, still reply in Roman Hinglish
+- Keep it casual, conversational, and friendly
 
 Rules:
 - Be concise, practical, encouraging
@@ -38,7 +48,7 @@ function buildPrompt(message: string, carbonData?: CarbonInput): { system: strin
   return { system: SYSTEM_PROMPT, context };
 }
 
-async function generateAIReponse(
+async function generateAIResponse(
   message: string,
   carbonData?: CarbonInput,
 ): Promise<string | null> {
@@ -64,7 +74,7 @@ async function generateAIReponse(
 
     if (!res.ok) return null;
 
-    const data = await res.json() as any;
+    const data: OpenRouterResponse = await res.json();
     const content = data.choices?.[0]?.message?.content?.trim();
     if (!content) return null;
 
@@ -73,7 +83,7 @@ async function generateAIReponse(
     const alphaRatio = (content.match(/[a-zA-Z\u0900-\u097F0-9\s]/g)?.length || 0) / content.length;
     if (alphaRatio < 0.5) return null;
 
-    const carbonWords = ['carbon', 'co2', 'footprint', 'energy', 'emission', 'footprint', 'kg', 'climate', 'sustainable'];
+    const carbonWords = ['carbon', 'co2', 'footprint', 'energy', 'emission', 'kg', 'climate', 'sustainable'];
     const hasRelevantContent = carbonWords.some(w => content.toLowerCase().includes(w)) || (content.toLowerCase().includes('क') || content.toLowerCase().includes('co'));
     if (!hasRelevantContent && content.length > 50) {
       const englishWords = (content.match(/[a-zA-Z]\w+/g) || []).length;
@@ -95,7 +105,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Consider carpooling or using public transport for your daily commute. Buses produce 60% less CO₂ than cars per km.',
+        'Carpooling ya public transport use karein daily commute ke liye. Buses produce 60% less CO₂ than cars per km.',
       impact: 'High',
       savings: input.carDistance * 0.21 * 0.5 * 30,
     });
@@ -104,7 +114,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Replace short car trips (< 5km) with cycling — zero emissions and great exercise!',
+        'Chhoti car trips (< 5km) ki jagah cycling karein — zero emissions aur acchi exercise!',
       impact: 'Medium',
       savings: 5 * 0.21 * 30,
     });
@@ -113,7 +123,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Switch to buses or trains instead of cars — they produce 60-80% less CO₂ per km.',
+        'Cars ki jagah buses ya trains use karein — ye 60-80% less CO₂ produce karti hain per km.',
       impact: 'High',
       savings: input.carDistance * 0.21 * 0.7 * 30,
     });
@@ -129,27 +139,27 @@ function generateEnergyRecommendations(
     recs.push({
       category: 'Energy',
       suggestion:
-        'Switch to LED bulbs, energy-efficient appliances, and unplug devices when not in use to cut electricity usage by 30%.',
+        'LED bulbs, energy-efficient appliances use karein aur devices unplug rakhein — electricity usage 30% tak kam ho sakta hai.',
       impact: 'High',
-      savings: input.electricityUsage * 0.527 * 0.3 * 30,
+      savings: input.electricityUsage * 0.527 * 0.3,
     });
   }
   if (input.acUsage > 4) {
     recs.push({
       category: 'Energy',
       suggestion:
-        'Set AC to 24°C instead of 18°C — every degree saves 6% on cooling energy.',
+        'AC 24°C pe rakhein instead of 18°C — har degree 6% cooling energy bachata hai.',
       impact: 'Medium',
-      savings: input.acUsage * 0.65 * 0.2 * 30,
+      savings: input.acUsage * 0.65 * 0.2,
     });
   }
   if (input.electricityUsage > 300 && input.electricityUsage <= 500) {
     recs.push({
       category: 'Energy',
       suggestion:
-        'Unplug electronics when not in use and switch to power strips to reduce standby power by up to 10%.',
+        'Electronics ko unplug karein jab use mein nahi hain aur power strips use karein — standby power 10% tak kam ho sakta hai.',
       impact: 'Low',
-      savings: input.electricityUsage * 0.527 * 0.1 * 30,
+      savings: input.electricityUsage * 0.527 * 0.1,
     });
   }
   return recs;
@@ -162,7 +172,7 @@ function generateFoodRecommendations(input: CarbonInput['food']): Recommendation
     recs.push({
       category: 'Food',
       suggestion:
-        'Replace 3-4 meat meals per week with plant-based options — they have half the carbon footprint.',
+        'Hafte ki 3-4 meat meals ki jagah plant-based options khaayein — inka carbon footprint aadha hota hai.',
       impact: 'High',
       savings: input.nonVegetarianMeals * 1.8 * 4,
     });
@@ -171,7 +181,7 @@ function generateFoodRecommendations(input: CarbonInput['food']): Recommendation
     recs.push({
       category: 'Food',
       suggestion:
-        'Reduce red meat to once a week to lower your food footprint by 40%.',
+        'Red meat sirf hafte mein ek baar khaayein — food footprint 40% tak kam ho sakta hai.',
       impact: 'Medium',
       savings: input.nonVegetarianMeals * 3.3 * 0.4 * 4,
     });
@@ -187,16 +197,16 @@ function generateLifestyleRecommendations(
     recs.push({
       category: 'Lifestyle',
       suggestion:
-        'Consolidate online orders to reduce packaging waste and delivery emissions by up to 50%.',
+        'Online orders consolidate karein — packaging waste aur delivery emissions 50% tak kam ho sakte hain.',
       impact: 'Medium',
-      savings: input.onlineShoppingFrequency * 2.5 * 0.5 * 4,
+      savings: input.onlineShoppingFrequency * 2.5 * 0.5,
     });
   }
   if (input.wasteGeneration > 3) {
     recs.push({
       category: 'Lifestyle',
       suggestion:
-        'Start composting organic waste and recycling more. This can cut waste-related methane emissions by 60%.',
+        'Organic waste compost karein aur recycling badhayein — waste-related methane emissions 60% tak kam ho sakti hain.',
       impact: 'High',
       savings: input.wasteGeneration * 1.8 * 0.6 * 4,
     });
@@ -223,7 +233,7 @@ function buildDataSummary(carbonData: CarbonInput): string {
   ];
   categories.sort((a, b) => b.value - a.value);
 
-  let summary = `Your estimated monthly carbon footprint is **${result.total.toFixed(1)} kg CO₂**.\n\nBreakdown:\n`;
+  let summary = `Aapka estimated monthly carbon footprint hai **${result.total.toFixed(1)} kg CO₂**.\n\nBreakdown:\n`;
   categories.forEach((c) => {
     const pct = result.total > 0 ? ((c.value / result.total) * 100).toFixed(0) : '0';
     summary += `- **${c.name}**: ${c.value.toFixed(1)} kg (${pct}%)\n`;
@@ -249,7 +259,7 @@ function hotspotAnalysis(carbonData: CarbonInput): string {
   if (categories.length === 0) return '';
 
   const total = categories.reduce((s, c) => s + c.value, 0);
-  let analysis = `\n\n**Hotspot Analysis**:\n`;
+    let analysis = `\n\n**Hotspot Analysis (Sabse bade sources)**:\n`;
   categories.forEach((c, i) => {
     const pct = total > 0 ? ((c.value / total) * 100).toFixed(0) : '0';
     const bar = '█'.repeat(parseInt(pct) / 10) || '▏';
@@ -274,22 +284,22 @@ function buildPersonalizedReductionPlan(carbonData: CarbonInput): string {
   const biggest = categories[0];
   const bigPct = result.total > 0 ? ((biggest.value / result.total) * 100).toFixed(0) : '0';
 
-  response += `\nYour biggest impact area is **${biggest.name}** (${bigPct}% of total). Focus here first.`;
+  response += `\nAapka sabse bada impact area hai **${biggest.name}** (${bigPct}% of total). Pehle yahan focus karein.`;
   response += hotspotAnalysis(carbonData);
 
   if (recs.length > 0) {
-    response += '\n\n**Personalized recommendations**:\n';
+    response += '\n\n**Personalized recommendations (Aapke liye sujhaav)**:\n';
     recs.slice(0, 4).forEach((rec, i) => {
-      response += `\n${i + 1}. **${rec.category}**: ${rec.suggestion}\n   - Save ~${rec.savings.toFixed(0)} kg CO₂/month (${rec.impact} impact)`;
+      response += `\n${i + 1}. **${rec.category}**: ${rec.suggestion}\n   - Lagbhag ~${rec.savings.toFixed(0)} kg CO₂/month bacha sakte hain (${rec.impact} impact)`;
     });
     const totalSavings = recs.reduce((s, r) => s + r.savings, 0);
     response += `\n\nTotal potential savings: **${totalSavings.toFixed(0)} kg CO₂/month** (${result.total > 0 ? ((totalSavings / result.total) * 100).toFixed(0) : 0}% reduction possible!)`;
     response += `\n${treesEquivalency(totalSavings)}`;
   } else {
-    response += '\nYou are already doing great! Keep maintaining your sustainable habits.';
+    response += '\nAap already bahut accha kar rahe hain! Aise hi sustainable habits maintain karein.';
   }
 
-  response += '\n\nTry the Simulator to experiment with changes in real time!';
+  response += '\n\nSimulator mein jaakar real time changes try karein!';
   return response;
 }
 
@@ -297,7 +307,7 @@ export async function generateCoachResponse(
   message: string,
   carbonData?: CarbonInput,
 ): Promise<string> {
-  const aiResponse = await generateAIReponse(message, carbonData);
+  const aiResponse = await generateAIResponse(message, carbonData);
   if (aiResponse) return aiResponse;
 
   const lower = message.toLowerCase();
@@ -317,9 +327,9 @@ export async function generateCoachResponse(
   if (isGreeting && !isAskReduce && !isAskImpact) {
     if (carbonData) {
       const result = calculateCarbonFootprint(carbonData);
-      return `Hello! 👋 I see you have carbon data — your monthly footprint is **${result.total.toFixed(1)} kg CO₂**. Ask me how to reduce it or what your biggest impact area is!`;
+      return `Namaste! 👋 Aapka monthly carbon footprint hai **${result.total.toFixed(1)} kg CO₂**. Mujhse poochhiye kaise reduce karein ya aapka biggest impact area kya hai!`;
     }
-    return 'Hello! I am your CarbonWise AI Sustainability Coach. Ask me about reducing your carbon footprint, understanding your impact, or getting personalized eco-tips!';
+    return 'Namaste! Main hoon aapka CarbonWise AI Sustainability Coach. Mujhse poochhiye carbon footprint kam karne ke tips, apna impact samajhne, ya personalized eco-suggestions ke liye!';
   }
 
   if (isAskPurpose) {
@@ -328,7 +338,7 @@ export async function generateCoachResponse(
 
   if (isAskImpact) {
     if (!carbonData) {
-      return 'To analyze your biggest impact, please calculate your carbon footprint first using the Calculator page. Then I can give you personalized insights!';
+      return 'Pehle apna carbon footprint Calculator page se calculate karein. Phir main aapko personalized insights de sakta hoon!';
     }
     const result = calculateCarbonFootprint(carbonData);
     const categories = [
@@ -344,52 +354,52 @@ export async function generateCoachResponse(
 
     let response = buildDataSummary(carbonData);
     response += hotspotAnalysis(carbonData);
-    response += `\n**${biggest.name}** is your biggest impact area — contributing **${pct}%** of total emissions (${biggest.value.toFixed(1)} kg CO₂).`;
+    response += `\nAapka sabse bada impact area hai **${biggest.name}** — jo **${pct}%** total emissions contribute kar raha hai (${biggest.value.toFixed(1)} kg CO₂).`;
     const saving20 = biggest.value * 0.2;
-    response += `\n\nIf you reduce ${biggest.name.toLowerCase()} by just 20%, you would save ~${saving20.toFixed(1)} kg CO₂/month.`;
+    response += `\n\nAgar ${biggest.name.toLowerCase()} sirf 20% bhi reduce karein, to aap ~${saving20.toFixed(1)} kg CO₂/month bacha sakte hain.`;
     response += `\n${treesEquivalency(saving20)}`;
     return response;
   }
 
   if (isAskCalculation) {
-    return 'Here is how the carbon footprint is calculated:\n\nEach category uses a simple formula:\n\n**Energy** = electricity (kWh) × 0.527 + AC (hours) × 0.65\n**Transport** = car (km) × 0.21 + bus (km) × 0.089 + train (km) × 0.041\n**Food** = veg meals × 1.5 + non-veg meals × 3.3\n**Lifestyle** = online shopping × 2.5 + waste (kg) × 1.8\n\nThe numbers (0.527, 0.21, etc.) are standard emission factors from environmental research — they represent kg of CO₂ per unit of activity.\n\n**Total** = Energy + Transport + Food + Lifestyle\n**Percentage** = (category total ÷ overall total) × 100\n\nTry the Calculator page to see your own footprint!';
+    return 'Carbon footprint calculate kaise hota hai — samajhiye:\n\nHar category ka simple formula hai:\n\n**Energy** = electricity (kWh) × 0.527 + AC (hours) × 0.65\n**Transport** = car (km) × 0.21 + bus (km) × 0.089 + train (km) × 0.041\n**Food** = veg meals × 1.5 + non-veg meals × 3.3\n**Lifestyle** = online shopping × 2.5 + waste (kg) × 1.8\n\nYeh numbers (0.527, 0.21, etc.) standard emission factors hain — matlab har unit activity se kitna CO₂ banta hai.\n\n**Total** = Energy + Transport + Food + Lifestyle\n**Percentage** = (category total ÷ overall total) × 100\n\nApna footprint dekhne ke liye Calculator page try karein!';
   }
 
   if (isAskReduce) {
     if (!carbonData) {
-      return 'Great question! Here are general tips to reduce your carbon footprint:\n\n1. **Transport**: Walk, bike, or use public transit\n2. **Energy**: Switch to LEDs, unplug devices\n3. **Food**: Eat more plant-based meals\n4. **Lifestyle**: Reduce shopping, recycle more\n\nFor personalized recommendations, calculate your footprint on the Calculator page!';
+      return 'Bahut accha sawaal! Carbon footprint kam karne ke kuch general tips:\n\n1. **Transport**: Walking, cycling ya public transit use karein\n2. **Energy**: LED bulbs lagayein, devices unplug rakhein\n3. **Food**: Plant-based meals zyada khayein\n4. **Lifestyle**: Shopping kam karein, recycle zyada karein\n\nPersonalized recommendations ke liye pehle Calculator page se apna footprint calculate karein!';
     }
     return buildPersonalizedReductionPlan(carbonData);
   }
 
   if (isAskChallenge) {
-    return 'Great idea! Here are eco-challenges you can try:\n\n' +
+    return 'Mast idea! Yeh rahe eco-challenges jo aap try kar sakte hain:\n\n' +
       '**Transportation**:\n' +
-      '1. **Public Transport Week** - Only public transit for 7 days (500 pts)\n' +
-      '2. **No Car Day** - Car-free for one day (100 pts)\n' +
-      '3. **Bike Commute** - Bike for 3+ days this week (250 pts)\n' +
-      '4. **Carpool Week** - Share rides for 5 days (300 pts)\n\n' +
+      '1. **Public Transport Week** - Sirf public transit 7 din (500 pts)\n' +
+      '2. **No Car Day** - Ek din bina car ke (100 pts)\n' +
+      '3. **Bike Commute** - 3+ days cycling is hafte (250 pts)\n' +
+      '4. **Carpool Week** - 5 din ride share karein (300 pts)\n\n' +
       '**Energy**:\n' +
-      '5. **Save Electricity** - Reduce usage by 20% (300 pts)\n' +
-      '6. **Solar Switch** - Solar chargers only for a week (350 pts)\n' +
-      '7. **Cold Water Wash** - Cold wash for 2 weeks (200 pts)\n' +
-      '8. **AC-Free Week** - No AC for 7 days (400 pts)\n\n' +
+      '5. **Save Electricity** - 20% usage kam karein (300 pts)\n' +
+      '6. **Solar Switch** - Sirf solar chargers ek hafte (350 pts)\n' +
+      '7. **Cold Water Wash** - Thande paani mein kapde dhoyein 2 hafte (200 pts)\n' +
+      '8. **AC-Free Week** - 7 din bina AC ke (400 pts)\n\n' +
       '**Food**:\n' +
-      '9. **Plant-Based Week** - Only plant meals for 7 days (400 pts)\n' +
-      '10. **Local Food Challenge** - Local food only for a week (350 pts)\n' +
-      '11. **Meat-Free Month** - No meat for 30 days (1000 pts)\n\n' +
+      '9. **Plant-Based Week** - Sirf plant meals 7 din (400 pts)\n' +
+      '10. **Local Food Challenge** - Sirf local food ek hafte (350 pts)\n' +
+      '11. **Meat-Free Month** - 30 din no meat (1000 pts)\n\n' +
       '**Lifestyle**:\n' +
-      '12. **Green Shopping** - No online shopping for a week (200 pts)\n' +
-      '13. **Zero Waste Week** - No landfill waste for 7 days (450 pts)\n' +
-      '14. **Paperless Office** - Go paperless for a week (150 pts)\n' +
-      '15. **Tree Planting Drive** - Plant 5 trees this month (600 pts)\n\n' +
-      'Visit the Challenges page to track your progress!';
+      '12. **Green Shopping** - Ek hafte online shopping nahi (200 pts)\n' +
+      '13. **Zero Waste Week** - 7 din koi landfill waste nahi (450 pts)\n' +
+      '14. **Paperless Office** - Ek hafte paper use na karein (150 pts)\n' +
+      '15. **Tree Planting Drive** - Is mahine 5 ped lagayein (600 pts)\n\n' +
+      'Challenges page jaakar apna progress track karein!';
   }
 
   if (isAskScore) {
     if (!carbonData) {
       const benchmarks = getScoreBenchmarks();
-      return 'Your Sustainability Score (0-100) compares your footprint against these benchmarks:' +
+      return 'Sustainability Score (0-100) aapke footprint ko in benchmarks se compare karta hai:' +
         '\n\n- **Indian average**: ' + benchmarks.indianAvg + ' kg CO\u2082/month' +
         '\n- **Global average**: ' + benchmarks.globalAvg + ' kg CO\u2082/month' +
         '\n- **Target (sustainable)**: ' + benchmarks.target + ' kg CO\u2082/month' +
@@ -398,7 +408,7 @@ export async function generateCoachResponse(
         '\n- **60-79**: Good' +
         '\n- **40-59**: Average' +
         '\n- **0-39**: Needs Improvement' +
-        '\n\nCalculate your footprint to see your score!';
+        '\n\nApna score dekhne ke liye pehle Calculator se footprint calculate karein!';
     }
     const result = calculateCarbonFootprint(carbonData);
     const benchmarks = getScoreBenchmarks();
@@ -407,37 +417,37 @@ export async function generateCoachResponse(
 
     let comparison = '';
     if (result.total < benchmarks.target) {
-      comparison = '\n\nGreat! Your footprint (' + result.total.toFixed(1) + ' kg) is below the sustainable target of ' + benchmarks.target + ' kg!';
+      comparison = '\n\nBahut accha! Aapka footprint (' + result.total.toFixed(1) + ' kg) sustainable target (' + benchmarks.target + ' kg) se bhi kam hai!';
     } else if (result.total < benchmarks.indianAvg) {
-      comparison = '\n\nYour footprint (' + result.total.toFixed(1) + ' kg) is below the Indian average (' + benchmarks.indianAvg + ' kg). Keep improving!';
+      comparison = '\n\nAapka footprint (' + result.total.toFixed(1) + ' kg) Indian average (' + benchmarks.indianAvg + ' kg) se kam hai. Aise hi improve karte rahein!';
     } else if (result.total < benchmarks.globalAvg) {
-      comparison = '\n\nYour footprint (' + result.total.toFixed(1) + ' kg) is below the global average (' + benchmarks.globalAvg + ' kg) but above the Indian average (' + benchmarks.indianAvg + ' kg).';
+      comparison = '\n\nAapka footprint (' + result.total.toFixed(1) + ' kg) global average (' + benchmarks.globalAvg + ' kg) se kam hai lekin Indian average (' + benchmarks.indianAvg + ' kg) se thoda zyada hai.';
     } else {
-      comparison = '\n\nYour footprint (' + result.total.toFixed(1) + ' kg) is above the global average (' + benchmarks.globalAvg + ' kg). Try the Simulator to find savings!';
+      comparison = '\n\nAapka footprint (' + result.total.toFixed(1) + ' kg) global average (' + benchmarks.globalAvg + ' kg) se zyada hai. Simulator mein jaakar savings explore karein!';
     }
 
-    return 'Your Sustainability Score is **' + score + '/100** (' + category + ').' + comparison;
+    return 'Aapka Sustainability Score hai **' + score + '/100** (' + category + ').' + comparison;
   }
 
   if (isAskTransport) {
-    return 'Here are tips to reduce transport emissions:\n\n1. **Walk or bike** for short trips (<5 km) — zero emissions\n2. **Public transport** (bus/train) produces 60-80% less CO₂ than cars\n3. **Carpool** — sharing a car with 4 people cuts emissions by 75%\n4. **Electric vehicles** produce 50-70% fewer emissions than petrol cars\n5. **Avoid flights** when possible — a round trip can emit 1+ ton CO₂\n\nTip: Replacing just 10 km/day of car travel with bus saves ~550 kg CO₂/year!';
+    return 'Transport emissions kam karne ke tips:\n\n1. **Walk ya bike** karein chhoti doori ke liye (<5 km) — zero emissions\n2. **Public transport** (bus/train) cars se 60-80% kam CO₂ produce karta hai\n3. **Carpool** — 4 log ek car share karein to 75% emissions kam\n4. **Electric vehicles** petrol cars se 50-70% kam emissions\n5. **Flights avoid karein** — ek round trip 1+ ton CO₂ emit kar sakta hai\n\nTip: Sirf 10 km/day car ki jagah bus use karein to ~550 kg CO₂/year bacha sakte hain!';
   }
 
   if (isAskEnergy) {
-    return 'Here are tips to reduce energy emissions:\n\n1. **LED bulbs** use 80% less energy than incandescent\n2. **Unplug devices** — standby power can be 10% of your bill\n3. **AC at 24°C** instead of 18°C saves 6% per degree\n4. **Solar panels** can cut grid electricity use by 60-90%\n5. **Energy-efficient appliances** use 30-50% less power\n\nElectricity is often the biggest contributor. Every 100 kWh saved = 53 kg CO₂ less!';
+    return 'Energy emissions kam karne ke tips:\n\n1. **LED bulbs** incandescent se 80% kam energy use karte hain\n2. **Devices unplug karein** — standby power 10% bill ka ho sakta hai\n3. **AC 24°C** pe rakhein instead of 18°C — har degree pe 6% energy bachta hai\n4. **Solar panels** grid electricity 60-90% tak kam kar sakte hain\n5. **Energy-efficient appliances** 30-50% kam power use karte hain\n\nElectricity usually sabse bada contributor hota hai. Har 100 kWh saved = 53 kg CO₂ kam!';
   }
 
   if (isAskFood) {
-    return 'Here are tips to reduce food emissions:\n\n1. **Plant-based meals** have half the carbon footprint of meat meals\n2. **Reduce red meat** — beef produces 60 kg CO₂ per kg vs 2 kg for lentils\n3. **Avoid food waste** — 1/3 of food is wasted, producing 8% of global emissions\n4. **Buy local & seasonal** — reduces transport emissions by up to 10x\n5. **Compost organic waste** instead of sending to landfill\n\nGoing vegetarian for just 3 days a week saves ~200 kg CO₂/year!';
+    return 'Food emissions kam karne ke tips:\n\n1. **Plant-based meals** ka carbon footprint meat meals se aadha hai\n2. **Red meat kam khayein** — beef 60 kg CO₂ per kg vs lentils 2 kg per kg\n3. **Food waste avoid karein** — 1/3 food waste hota hai, jo 8% global emissions hai\n4. **Local & seasonal khareedein** — transport emissions 10x tak kam hote hain\n5. **Compost karein** organic waste ko landfill mein bhejne ki jagah\n\nHafte mein sirf 3 din vegetarian jaane se ~200 kg CO₂/year bachta hai!';
   }
 
   if (isAskLifestyle) {
-    return 'Here are tips to reduce lifestyle emissions:\n\n1. **Reduce online shopping** — consolidate orders to cut delivery trips\n2. **Avoid single-use plastic** — produces 6 kg CO₂ per kg of plastic\n3. **Recycle & compost** — cuts waste methane emissions by 60%\n4. **Buy second-hand** — extends product life and reduces manufacturing emissions\n5. **Minimalism** — every item you don\'t buy saves its production footprint\n\nSmall lifestyle changes add up to big savings over time!';
+    return 'Lifestyle emissions kam karne ke tips:\n\n1. **Online shopping kam karein** — orders consolidate karein delivery trips kam karne ke liye\n2. **Single-use plastic avoid karein** — har kg plastic se 6 kg CO₂ banta hai\n3. **Recycle aur compost karein** — waste methane emissions 60% tak kam hoti hain\n4. **Second-hand kharidein** — product life badhti hai aur manufacturing emissions kam\n5. **Minimalism** — jo item nahi kharida, uska production footprint bhi nahi\n\nChhoti lifestyle changes bhi time ke saath bade savings mein badal sakti hain!';
   }
 
   if (carbonData) {
     return buildPersonalizedReductionPlan(carbonData);
   }
 
-  return 'Main aapki kaise madad kar sakta hoon?\n\nYeh sawaal poochh sakte hain:\n1. **Footprint kaise reduce karein?** — "How can I reduce my footprint?"\n2. **Sabse bada impact kiska hai?** — "What affects me most?"\n3. **Calculation kaise hoti hai?** — "Calculate kese hota hai"\n4. **Eco challenges** — "What challenges can I try?"\n5. **Sustainability score** — "What is my score?"\n\nPehle Calculator page se apna carbon footprint calculate karein!';
+  return 'Main aapki kaise madad kar sakta hoon?\n\nYeh sawaal poochh sakte hain:\n1. **Footprint kaise reduce karein?** — "Apna carbon footprint kaise kam karein"\n2. **Sabse bada impact kiska hai?** — "Mera sabse bada carbon source kya hai"\n3. **Calculation kaise hoti hai?** — "Calculate kese hota hai"\n4. **Eco challenges** — "Kaun se challenges try kar sakta hoon"\n5. **Sustainability score** — "Mera score kya hai"\n\nPehle Calculator page se apna carbon footprint calculate karein!';
 }

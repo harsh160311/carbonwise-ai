@@ -8,7 +8,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Consider carpooling or using public transport for your daily commute.',
+        'Carpooling ya public transport use karein daily commute ke liye.',
       impact: 'High',
       savings: input.carDistance * 0.21 * 0.5 * 30,
     });
@@ -17,7 +17,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Replace short car trips (< 5km) with cycling to eliminate emissions.',
+        'Chhoti car trips (< 5km) ki jagah cycling karein — zero emissions.',
       impact: 'Medium',
       savings: 5 * 0.21 * 30,
     });
@@ -26,7 +26,7 @@ function generateTransportRecommendations(
     recs.push({
       category: 'Transportation',
       suggestion:
-        'Use buses or trains — they produce 60-80% less CO₂ per km than cars.',
+        'Cars ki jagah buses ya trains use karein — ye 60-80% less CO₂ produce karti hain per km.',
       impact: 'High',
       savings: input.carDistance * 0.21 * 0.7 * 30,
     });
@@ -42,27 +42,27 @@ function generateEnergyRecommendations(
     recs.push({
       category: 'Energy',
       suggestion:
-        'Switch to LED bulbs and energy-efficient appliances.',
+        'LED bulbs aur energy-efficient appliances use karein.',
       impact: 'High',
-      savings: input.electricityUsage * 0.527 * 0.3 * 30,
+      savings: input.electricityUsage * 0.527 * 0.3,
     });
   }
   if (input.acUsage > 4) {
     recs.push({
       category: 'Energy',
       suggestion:
-        'Set AC to 24°C — every degree saves 6% on cooling energy.',
+        'AC 24°C pe rakhein — har degree 6% cooling energy bachata hai.',
       impact: 'Medium',
-      savings: input.acUsage * 0.65 * 0.2 * 30,
+      savings: input.acUsage * 0.65 * 0.2,
     });
   }
   if (input.electricityUsage > 300) {
     recs.push({
       category: 'Energy',
       suggestion:
-        'Unplug electronics when not in use to reduce standby power.',
+        'Electronics unplug rakhein jab use mein nahi hain — standby power kam hota hai.',
       impact: 'Low',
-      savings: input.electricityUsage * 0.527 * 0.1 * 30,
+      savings: input.electricityUsage * 0.527 * 0.1,
     });
   }
   return recs;
@@ -77,7 +77,7 @@ function generateFoodRecommendations(
     recs.push({
       category: 'Food',
       suggestion:
-        'Have 3-4 vegetarian meals per week — plant-based meals have half the footprint.',
+        'Hafte ki 3-4 vegetarian meals khaayein — plant-based meals ka footprint aadha hota hai.',
       impact: 'High',
       savings: input.nonVegetarianMeals * 1.8 * 4,
     });
@@ -86,7 +86,7 @@ function generateFoodRecommendations(
     recs.push({
       category: 'Food',
       suggestion:
-        'Reduce red meat to once a week to lower food footprint by 40%.',
+        'Red meat sirf hafte mein ek baar khaayein — food footprint 40% tak kam ho sakta hai.',
       impact: 'Medium',
       savings: input.nonVegetarianMeals * 3.3 * 0.4 * 4,
     });
@@ -102,16 +102,16 @@ function generateLifestyleRecommendations(
     recs.push({
       category: 'Lifestyle',
       suggestion:
-        'Consolidate online orders to reduce packaging and delivery emissions.',
+        'Online orders consolidate karein — packaging aur delivery emissions kam hote hain.',
       impact: 'Medium',
-      savings: input.onlineShoppingFrequency * 2.5 * 0.5 * 4,
+      savings: input.onlineShoppingFrequency * 2.5 * 0.5,
     });
   }
   if (input.wasteGeneration > 3) {
     recs.push({
       category: 'Lifestyle',
       suggestion:
-        'Start composting and recycling to cut methane from landfills.',
+        'Composting aur recycling start karein — landfills se methane emissions kam hote hain.',
       impact: 'High',
       savings: input.wasteGeneration * 1.8 * 0.6 * 4,
     });

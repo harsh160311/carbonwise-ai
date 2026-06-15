@@ -27,12 +27,10 @@ const sampleInput: CarbonInput = {
 };
 
 describe('Carbon Calculator', () => {
-  it('should calculate transportation emissions correctly', () => {
+  it('should calculate transportation emissions correctly (daily -> monthly)', () => {
     const result = calculateCarbonFootprint(sampleInput);
-    expect(result.transportation).toBeCloseTo(
-      20 * 0.21 + 5 * 0 + 10 * 0.089 + 0 * 0.041,
-      2,
-    );
+    const daily = 20 * 0.21 + 5 * 0 + 10 * 0.089 + 0 * 0.041;
+    expect(result.transportation).toBeCloseTo(daily * 30, 2);
   });
 
   it('should calculate energy emissions correctly', () => {
@@ -40,14 +38,15 @@ describe('Carbon Calculator', () => {
     expect(result.energy).toBeCloseTo(400 * 0.527 + 4 * 0.65, 2);
   });
 
-  it('should calculate food emissions correctly', () => {
+  it('should calculate food emissions correctly (weekly -> monthly)', () => {
     const result = calculateCarbonFootprint(sampleInput);
-    expect(result.food).toBeCloseTo(7 * 1.5 + 14 * 3.3, 2);
+    const weekly = 7 * 1.5 + 14 * 3.3;
+    expect(result.food).toBeCloseTo(weekly * 4.33, 2);
   });
 
-  it('should calculate lifestyle emissions correctly', () => {
+  it('should calculate lifestyle emissions correctly (waste weekly -> monthly)', () => {
     const result = calculateCarbonFootprint(sampleInput);
-    expect(result.lifestyle).toBeCloseTo(3 * 2.5 + 2 * 1.8, 2);
+    expect(result.lifestyle).toBeCloseTo(3 * 2.5 + 2 * 1.8 * 4.33, 2);
   });
 
   it('should calculate total emissions', () => {

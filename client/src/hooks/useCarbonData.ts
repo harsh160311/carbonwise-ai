@@ -12,7 +12,7 @@ export function useCarbonData() {
   const addEntry = useCallback(
     (input: CarbonInput) => {
       const result = calculateCarbonFootprint(input);
-      const weeklyTotal = result.total * 7;
+      const weeklyTotal = result.total / 4.33;
       const sustainabilityScore = calculateSustainabilityScore(
         result.total,
         weeklyTotal,

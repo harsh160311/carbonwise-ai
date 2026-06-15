@@ -1,310 +1,290 @@
-# CarbonWise AI
+# 🌱 CarbonWise AI
 
-> **AI-Powered Carbon Footprint Awareness Platform**
+<div align="center">
 
-CarbonWise AI is a modern, full-stack web application that helps individuals understand, track, and reduce their carbon footprint through personalized AI-powered recommendations, interactive simulations, and gamified challenges.
+# AI-Powered Carbon Footprint Awareness Platform
 
----
+Track, analyze, and reduce your carbon footprint with AI-driven insights, sustainability simulations, and gamified eco-challenges.
 
-## Features
+![React](https://img.shields.io/badge/React-18-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![Status](https://img.shields.io/badge/Status-Production-success)
 
-### 1. Carbon Footprint Calculator
-Calculate your estimated monthly CO₂ emissions across four categories:
-- **Transportation** - Car, bike, bus, and train travel
-- **Energy** - Electricity and AC usage
-- **Food** - Vegetarian and non-vegetarian meals
-- **Lifestyle** - Online shopping and waste generation
-
-### 2. Interactive Dashboard
-- Monthly and weekly footprint summaries
-- Emission category breakdown with pie charts
-- Weekly and monthly trend charts
-- Sustainability score (0–100)
-
-### 3. Carbon Reduction Simulator
-- Real-time slider-based simulation
-- Instant feedback on emission changes
-- Compare current vs. optimized footprint
-- Category-level savings breakdown
-
-### 4. AI Sustainability Coach
-- Natural language chat interface (Hindi, Hinglish & English)
-- Real AI via OpenRouter (Gemma, Llama, Mistral models)
-- Personalized recommendations based on user data
-- Context-aware responses with carbon footprint analysis
-- Carbon hotspot analysis with visual bars
-- Environmental equivalence (tree planting equivalent)
-- Fallback rule-based system when AI is unavailable
-
-### 5. Progress Tracking
-- Historical data stored in local storage
-- Weekly and monthly trend visualization
-- Improvement percentage tracking
-
-### 6. Sustainability Score
-- Score from 0–100 with categories: Excellent, Good, Average, Needs Improvement
-- Benchmark-based scoring against Indian average (167 kg/month), global average (250 kg/month), and sustainable target (83 kg/month)
-- Transparent scoring methodology
-- Progress tracking over time
-
-### 7. Eco Challenges
-- **15 gamified challenges** across all 4 categories
-- Progress tracking with points
-- Visual completion indicators
-- Reset functionality
-- Persistent storage (survives server restart)
+</div>
 
 ---
 
-## Architecture
+## 📖 Overview
 
-```
+CarbonWise AI is a modern full-stack web application designed to help individuals understand, monitor, and reduce their carbon emissions through personalized recommendations, AI-powered coaching, and interactive sustainability tools.
+
+The platform transforms complex environmental data into actionable insights, making climate-conscious decision-making simple, engaging, and accessible.
+
+---
+
+## 🚀 Features
+
+### 🌍 Carbon Footprint Calculator
+
+Calculate estimated CO₂ emissions across multiple lifestyle categories:
+
+- Transportation
+- Energy Consumption
+- Food Habits
+- Lifestyle Activities
+
+### 📊 Interactive Dashboard
+
+- Monthly Carbon Footprint Summary
+- Weekly Carbon Footprint Analysis
+- Category-Wise Emission Breakdown
+- Sustainability Score Tracking
+- Trend Visualizations
+
+### 🤖 AI Sustainability Coach
+
+- AI-Powered Recommendations
+- Personalized Sustainability Guidance
+- Carbon Hotspot Analysis
+- Environmental Impact Awareness
+- Hinglish Support (Hindi + English)
+
+### 🎯 Carbon Reduction Simulator
+
+- Real-Time Emission Optimization
+- Reduction Scenario Modeling
+- Category-Based Savings Analysis
+- Instant Impact Feedback
+
+### 🏆 Eco Challenges System
+
+- 15 Sustainability Challenges
+- Progress Tracking
+- Reward Point System
+- Achievement Monitoring
+
+### 📈 Progress Tracking
+
+- Historical Data Storage
+- Weekly Improvement Reports
+- Monthly Performance Analysis
+- Sustainability Growth Monitoring
+
+### 🌱 Sustainability Score Engine
+
+- Score Range: 0–100
+- Excellent (80+)
+- Good (60–79)
+- Average (40–59)
+- Needs Improvement (<40)
+
+---
+
+## 🎯 Project Vision
+
+Climate change is one of the most pressing challenges of our generation.
+
+CarbonWise AI aims to bridge the gap between environmental awareness and practical action by providing individuals with data-driven insights and easy-to-follow sustainability recommendations.
+
+Our goal is to empower users to make informed decisions that contribute to a greener and more sustainable future.
+
+---
+
+## 🏗️ Architecture
+
+```bash
 carbonwise-ai/
-├── client/                    # React frontend (Vite)
+├── client/
 │   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   │   ├── calculator/    # Calculator form components
-│   │   │   ├── challenges/    # Challenge cards & progress
-│   │   │   ├── coach/         # AI chat components
-│   │   │   ├── dashboard/     # Dashboard widgets
-│   │   │   ├── layout/        # Navbar, Footer, Layout
-│   │   │   ├── simulator/     # Simulator controls & results
-│   │   │   └── ui/            # Base UI components
-│   │   ├── hooks/             # Custom React hooks
-│   │   ├── pages/             # Route pages
-│   │   ├── services/          # API client
-│   │   ├── types/             # TypeScript interfaces
-│   │   ├── utils/             # Calculations & helpers
-│   │   └── tests/             # Unit & component tests
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── types/
+│   │   ├── utils/
+│   │   └── tests/
 │   ├── tailwind.config.js
 │   └── vite.config.ts
-├── server/                    # Express backend
+│
+├── server/
 │   ├── src/
-│   │   ├── routes/            # API routes
-│   │   ├── services/          # Business logic
-│   │   ├── types/             # TypeScript types
-│   │   ├── utils/             # Helper functions
-│   │   ├── validators/        # Zod schemas
-│   │   ├── middleware/        # Error handling
-│   │   └── tests/             # Backend tests
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── middleware/
+│   │   ├── validators/
+│   │   ├── utils/
+│   │   └── tests/
+│   ├── data/
 │   └── tsconfig.json
-├── vercel.json                # Vercel deployment config
+│
+├── vercel.json
 ├── .env.example
 └── README.md
 ```
 
 ---
 
-## Tech Stack
+## 🛠️ Technology Stack
 
 ### Frontend
-- **React 18** with TypeScript
-- **Vite** for build tooling
-- **Tailwind CSS** for styling
-- **React Router v6** for routing
-- **Recharts** for data visualization
-- **Zod** for validation
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Recharts
+- Zod
 
 ### Backend
-- **Node.js** with Express
-- **TypeScript**
-- **Helmet** for security headers
-- **CORS** for cross-origin requests
-- **Rate Limiting** for API protection
-- **Zod** for request validation
-- **OpenRouter AI** for intelligent coach responses
+
+- Node.js
+- Express.js
+- TypeScript
+- OpenRouter AI
+- Helmet
+- CORS
+- Rate Limiting
 
 ### Testing
-- **Vitest** for unit tests
-- **React Testing Library** for component tests
+
+- Vitest
+- React Testing Library
 
 ---
 
-## Emission Factors & Sources
+## 🔥 Core Modules
 
-All emission factors used in calculations are from verified sources:
+### Carbon Calculator
 
-| Factor | Value | Unit | Source |
-|--------|-------|------|--------|
-| Car travel | 0.21 | kg CO₂/km | [EPA (US)](https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle) |
-| Bus travel | 0.089 | kg CO₂/km | [DEFRA (UK)](https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting) |
-| Train travel | 0.041 | kg CO₂/km | [DEFRA (UK)](https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting) |
-| Electricity | 0.527 | kg CO₂/kWh | [CEA (India)](https://cea.nic.in/carbon-dioxide-emission-factors/) |
-| AC usage | 0.65 | kg CO₂/hour | [BEE (India)](https://www.beestarlabel.com/) |
-| Vegetarian meal | 1.5 | kg CO₂/meal | [Our World in Data](https://ourworldindata.org/food-choice-vs-eating-local) |
-| Non-vegetarian meal | 3.3 | kg CO₂/meal | [Our World in Data](https://ourworldindata.org/food-choice-vs-eating-local) |
-| Online shopping | 2.5 | kg CO₂/order | [MIT Climate Portal](https://climate.mit.edu/ask-mit/how-much-does-online-shopping-contribute-pollution) |
-| Waste | 1.8 | kg CO₂/kg | [EPA (US)](https://www.epa.gov/facts-and-figures-about-materials-waste-and-recycling) |
+Provides emission calculations based on:
 
-### Benchmark Data
+- Daily Transportation
+- Monthly Electricity Consumption
+- Air Conditioner Usage
+- Food Consumption Patterns
+- Online Shopping Habits
+- Waste Generation
 
-| Benchmark | Value | Source |
-|-----------|-------|--------|
-| Indian average footprint | 167 kg CO₂/month | [Global Carbon Project](https://www.globalcarbonproject.org/) |
-| Global average footprint | 250 kg CO₂/month | [World Bank](https://data.worldbank.org/indicator/EN.ATM.CO2E.PC) |
-| Sustainable target | 83 kg CO₂/month | [UNEP](https://www.unep.org/resources/emissions-gap-report) |
+### AI Coach
 
-> **Note:** Tree equivalence: 1 tree absorbs ~21 kg CO₂ per year ([USDA Forest Service](https://www.fs.usda.gov/)).
+Analyzes:
 
----
+- User Carbon Profile
+- Emission Hotspots
+- Sustainable Alternatives
+- Personalized Recommendations
 
-## Installation
+### Simulator Engine
 
-### Prerequisites
+Allows users to:
 
-- Node.js 18+
-- npm 9+
+- Adjust Lifestyle Parameters
+- Compare Current vs Optimized Scenarios
+- Visualize Carbon Savings
 
-### Setup
+### Challenge System
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd carbonwise-ai
+Encourages:
 
-# Install all dependencies
-npm run install:all
-
-# Or install individually:
-npm install
-cd client && npm install
-cd ../server && npm install
-cd ..
-```
-
-### Environment Variables
-
-Copy the example environment files:
-
-```bash
-cp .env.example .env
-cp client/.env.example client/.env
-cp server/.env.example server/.env
-```
-
-|
-> **Note:** The AI Coach uses OpenRouter API for real AI responses. If no API key is set, it falls back to a rule-based system. Get a free key at [openrouter.ai](https://openrouter.ai).
+- Sustainable Habits
+- Environmental Awareness
+- Long-Term Behavioral Change
 
 ---
 
-## Running Locally
+## 📊 Sustainability Metrics
 
-```bash
-# Run both client and server
-npm run dev
+CarbonWise AI evaluates performance using:
 
-# Run only client
-npm run dev:client
+### Indian Benchmark
 
-# Run only server
-npm run dev:server
-```
+Average Carbon Footprint:
+167 kg CO₂ / Month
 
-- Client: http://localhost:5173
-- Server: http://localhost:3001
+### Global Benchmark
 
----
+Average Carbon Footprint:
+250 kg CO₂ / Month
 
-## Testing
+### Sustainability Target
 
-```bash
-# Run all tests
-npm test
-
-# Run client tests only
-npm run test:client
-
-# Run server tests only
-npm run test:server
-
-# Watch mode
-cd client && npm run test:watch
-cd server && npm run test:watch
-```
-
-### Test Coverage
-
-- **Calculator tests** - Verifies emission calculations across all categories
-- **Score tests** - Tests sustainability score calculation and categorization
-- **Recommendation tests** - Tests AI recommendation generation logic
-- **Component tests** - Tests UI component rendering
+Recommended Target:
+83 kg CO₂ / Month
 
 ---
 
-## Security Practices
+## 🔒 Security Features
 
-- **Input validation** using Zod schemas on all API endpoints
-- **Rate limiting** (100 requests per 15 minutes)
-- **Helmet** security headers
-- **CORS** configured for specific origins
-- **Environment variables** for sensitive configuration
-- **Request body size limits** (10kb)
-- **No secrets exposed** in client-side code
-- **Error boundaries** to prevent UI crashes
-- **Safe localStorage** usage with try-catch
+- Zod Request Validation
+- Helmet Security Headers
+- API Rate Limiting
+- Secure Environment Variables
+- Error Handling Middleware
+- Input Sanitization
+- Safe Local Storage Operations
 
 ---
 
-## Accessibility Features
+## ♿ Accessibility
 
-- Semantic HTML (`<nav>`, `<main>`, `<footer>`, `<section>`)
-- ARIA attributes (`aria-label`, `aria-current`, `aria-expanded`, `aria-live`)
-- Keyboard navigation support
-- Focus visible indicators
-- Screen reader friendly labels
-- Color contrast compliance (Tailwind defaults)
-- Responsive design (mobile-first)
-- Form input validation with error announcements
-- Progress indicators with ARIA attributes
+CarbonWise AI follows accessibility best practices:
 
----
-
-## Performance Optimizations
-
-- **Lazy loading** - Route-level code splitting with React.lazy
-- **Memoization** - React.useMemo and React.useCallback
-- **Optimized rendering** - Component separation
-- **Vite chunk splitting** - Vendor and chart libraries separated
-- **Efficient calculations** - Pure functions with no side effects
-- **CSS utility classes** - Tailwind for minimal CSS bundle
-- **Debounced inputs** - No unnecessary re-renders
+- Semantic HTML
+- Keyboard Navigation
+- ARIA Labels
+- Screen Reader Support
+- Responsive Design
+- Mobile-First Interface
+- Accessible Form Validation
 
 ---
 
-## API Endpoints
+## ⚡ Performance Optimizations
+
+- Route-Level Lazy Loading
+- React Memoization
+- Efficient State Management
+- Optimized Bundle Splitting
+- Lightweight Utility-First Styling
+- Debounced User Inputs
+
+---
+
+## 🌐 API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/carbon/calculate` | Calculate carbon footprint |
-| GET | `/api/carbon/factors` | Get emission factors |
-| POST | `/api/coach/chat` | Send message to AI coach |
-| GET | `/api/challenges` | Get all challenges |
-| POST | `/api/challenges/update` | Update challenge progress |
-| POST | `/api/challenges/reset` | Reset all challenges |
-| GET | `/api/health` | Health check |
+|----------|----------------------------|----------------------------|
+| POST | /api/carbon/calculate | Calculate emissions |
+| GET | /api/carbon/factors | Get emission factors |
+| POST | /api/coach/chat | AI Coach interaction |
+| GET | /api/challenges | Fetch challenges |
+| POST | /api/challenges/update | Update challenge progress |
+| POST | /api/challenges/reset | Reset challenge data |
+| GET | /api/health | Health check |
 
 ---
 
-## Deployment
+## 🚀 Deployment
 
-### Vercel (Frontend)
+### Frontend Deployment
+
+Vercel
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
 vercel
 ```
 
-The `vercel.json` configuration handles:
-- Build command: `cd client && npm run build`
-- Output directory: `client/dist`
-- SPA routing rewrites
+### Backend Deployment
 
-### Server Deployment
+Supported Platforms:
 
-The server can be deployed to any Node.js hosting (Render, Railway, Fly.io, etc.).
+- Render
+- Railway
+- Fly.io
+- VPS Hosting
 
 ```bash
 cd server
@@ -314,31 +294,75 @@ npm start
 
 ---
 
-## Future Enhancements
+## 🔮 Future Roadmap
 
-- [ ] User authentication and accounts
-- [ ] Social sharing and leaderboards
-- [ ] Community challenges and teams
-- [ ] User accounts with cloud sync
-- [ ] Multi-language support (more Indian languages)
-- [ ] PDF report generation
-- [ ] Carbon offset marketplace integration
-- [ ] Mobile app (React Native)
-- [ ] API for third-party integrations
-- [ ] Advanced analytics with ML predictions
-
----
+- User Authentication
+- Cloud Synchronization
+- Community Challenges
+- Leaderboards
+- Social Sharing
+- PDF Sustainability Reports
+- Mobile Application
+- Carbon Offset Marketplace
+- Machine Learning Predictions
+- Multi-Language Support
 
 ---
 
-## License
+## 🤝 Contributing
 
-MIT License - see [LICENSE](LICENSE) for details.
+Contributions are welcome.
+
+If you would like to improve CarbonWise AI:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Submit a pull request
 
 ---
 
-Built with ❤️ for a sustainable future.
+## ⭐ Support
+
+If you find this project useful:
+
+- Star the repository
+- Share with others
+- Contribute improvements
+- Report issues
 
 ---
 
-*Deployed on Vercel + Render*
+## 📜 License
+
+This project is licensed under the MIT License.
+
+See the LICENSE file for more information.
+
+---
+
+## 👨‍💻 Author
+
+<div align="center">
+
+### Harsh Nagpal
+
+Cyber Security Enthusiast • Full Stack Developer • AI Innovator
+
+GitHub: https://github.com/harsh160311
+
+Username: @harsh160311
+
+Made with ❤️ in India 🇮🇳
+
+</div>
+
+---
+
+<div align="center">
+
+## 🌱 Building Technology for a Sustainable Future
+
+CarbonWise AI © 2026 Harsh Nagpal
+
+</div>

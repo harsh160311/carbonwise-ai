@@ -3,7 +3,7 @@ import { calculateCarbonFootprint, calculateSustainabilityScore, getScoreCategor
 
 export function computeFootprint(input: CarbonInput) {
   const result = calculateCarbonFootprint(input);
-  const weeklyTotal = result.total * 7;
+  const weeklyTotal = result.total / 4.33;
   const score = calculateSustainabilityScore(result.total, weeklyTotal);
   const scoreCategory = getScoreCategory(score);
 

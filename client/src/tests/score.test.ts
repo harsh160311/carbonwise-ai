@@ -44,9 +44,9 @@ describe('Sustainability Score Utilities', () => {
 
     it('should explain the calculation method', () => {
       const explanation = getScoreExplanation(50);
-      expect(explanation).toContain('500 kg CO₂');
-      expect(explanation).toContain('60%');
-      expect(explanation).toContain('40%');
+      expect(explanation).toContain('Indian average (167 kg)');
+      expect(explanation).toContain('global average (250 kg)');
+      expect(explanation).toContain('sustainable target (83 kg)');
     });
   });
 });
