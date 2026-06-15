@@ -80,16 +80,14 @@ async function generateAIResponse(
 
     if (content.length < 20) return null;
 
-    const alphaRatio = (content.match(/[a-zA-Z\u0900-\u097F0-9\s]/g)?.length || 0) / content.length;
-    if (alphaRatio < 0.5) return null;
+    const alphaRatio = (content.match(/[a-zA-Z0-9\s]/g)?.length || 0) / content.length;
+    if (alphaRatio < 0.6) return null;
 
-    const carbonWords = ['carbon', 'co2', 'footprint', 'energy', 'emission', 'kg', 'climate', 'sustainable'];
-    const hasRelevantContent = carbonWords.some(w => content.toLowerCase().includes(w)) || (content.toLowerCase().includes('क') || content.toLowerCase().includes('co'));
-    if (!hasRelevantContent && content.length > 50) {
-      const englishWords = (content.match(/[a-zA-Z]\w+/g) || []).length;
-      const hindiChars = (content.match(/[\u0900-\u097F]/g) || []).length;
-      if (englishWords < 3 && hindiChars < 5) return null;
-    }
+    const devanagariChars = (content.match(/[\u0900-\u097F]/g) || []).length;
+    if (devanagariChars > 5) return null;
+
+    const hasEnglish = (content.match(/[a-zA-Z]\w+/g) || []).length >= 3;
+    if (!hasEnglish && content.length > 50) return null;
 
     return content;
   } catch {
