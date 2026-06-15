@@ -194,6 +194,32 @@ Encourages:
 - Long-Term Behavioral Change
 
 ---
+## 🎯 Chosen Vertical
+
+CarbonWise AI is built under the Sustainability and Environmental Awareness vertical.
+
+The platform focuses on helping individuals understand, track, and reduce their carbon footprint through AI-powered insights, personalized recommendations, and interactive sustainability tools.
+
+The target users include:
+- Students
+- Professionals
+- Families
+- Environmentally conscious individuals
+
+The solution bridges the gap between carbon awareness and actionable environmental behavior.
+
+## 📌 Assumptions Made
+
+The following assumptions were made while developing CarbonWise AI:
+
+- User-provided activity data is assumed to be accurate.
+- Carbon emission estimates are based on publicly available emission factors and industry benchmarks.
+- The platform provides awareness-focused estimates and not certified carbon audits.
+- Challenge progress is self-reported by users.
+- Sustainability scores are benchmark-based and intended for educational purposes.
+- Internet connectivity is available for AI-powered coaching features.
+- Local storage is used for lightweight persistence in the MVP version.
+
 
 ## 📊 Sustainability Metrics
 
@@ -308,18 +334,22 @@ npm start
 - Multi-Language Support
 
 ---
+## 🧪 Testing
 
-## 🤝 Contributing
+CarbonWise AI includes automated tests for:
 
-Contributions are welcome.
+- Carbon footprint calculations
+- Sustainability score generation
+- AI recommendation logic
+- API endpoint validation
 
-If you would like to improve CarbonWise AI:
+Testing Frameworks:
+- Vitest
+- React Testing Library
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Submit a pull request
+Run tests:
 
+npm run test
 ---
 
 ## ⭐ Support
@@ -328,7 +358,6 @@ If you find this project useful:
 
 - Star the repository
 - Share with others
-- Contribute improvements
 - Report issues
 
 ---
