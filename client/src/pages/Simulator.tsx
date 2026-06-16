@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCarbonData } from '../hooks/useCarbonData';
 import { useSimulator } from '../hooks/useSimulator';
@@ -6,7 +6,7 @@ import { SimulatorControls } from '../components/simulator/SimulatorControls';
 import { SimulationResults } from '../components/simulator/SimulationResults';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import type { CarbonInput, CarbonResult } from '../types';
+import type { CarbonInput } from '../types';
 
 function EmptySimulatorState({ onNavigate }: { onNavigate: () => void }) {
   return (
@@ -41,10 +41,16 @@ export function Simulator() {
     }
   }, [latestEntry?.input, resetToInput]);
 
-  const memoResult = useMemo((): CarbonResult => currentResult, [currentResult]);
-  const memoSavings = useMemo(() => savings, [savings]);
-  const memoSavingsPercent = useMemo((): number => savingsPercentage, [savingsPercentage]);
-  const memoInput = useMemo((): CarbonInput => input, [input]);
+  const handleFieldChange = useCallback(
+    (category: keyof CarbonInput, field: string, value: number) => {
+      const cat = category;
+      const typedField = field as keyof CarbonInput[typeof cat];
+      updateField(cat, typedField, value);
+    },
+    [updateField],
+  );
+
+  const handleNavigate = useCallback(() => navigate('/calculator'), [navigate]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -57,26 +63,22 @@ export function Simulator() {
         </p>
       </div>
 
-      {!latestEntry && <EmptySimulatorState onNavigate={() => navigate('/calculator')} />}
+      {!latestEntry && <EmptySimulatorState onNavigate={handleNavigate} />}
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <Card>
             <SimulatorControls
-              input={memoInput}
-              onFieldChange={(category, field, value) => {
-                const cat = category as keyof CarbonInput;
-                const typedField = field as keyof CarbonInput[typeof cat];
-                updateField(cat, typedField, value);
-              }}
+              input={input}
+              onFieldChange={handleFieldChange}
             />
           </Card>
         </div>
         <div className="lg:col-span-2">
           <SimulationResults
-            currentResult={memoResult}
-            savings={memoSavings}
-            savingsPercentage={memoSavingsPercent}
+            currentResult={currentResult}
+            savings={savings}
+            savingsPercentage={savingsPercentage}
           />
         </div>
       </div>
