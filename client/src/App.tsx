@@ -22,6 +22,12 @@ const AICoach = lazy(() =>
 const Challenges = lazy(() =>
   import('./pages/Challenges').then((m) => ({ default: m.Challenges })),
 );
+const PlasticFootprint = lazy(() =>
+  import('./pages/PlasticFootprint').then((m) => ({ default: m.PlasticFootprint })),
+);
+const EventPlanner = lazy(() =>
+  import('./pages/EventPlanner').then((m) => ({ default: m.EventPlanner })),
+);
 
 function PageLoader() {
   return (
@@ -44,6 +50,8 @@ export default function App() {
               <Route path="/simulator" element={<Simulator />} />
               <Route path="/ai-coach" element={<AICoach />} />
               <Route path="/challenges" element={<Challenges />} />
+              <Route path="/plastic-footprint" element={<PlasticFootprint />} />
+              <Route path="/event-planner" element={<EventPlanner />} />
               <Route
                 path="*"
                 element={

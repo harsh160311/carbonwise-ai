@@ -1,5 +1,12 @@
-import { CarbonInput, Recommendation } from '../types/index.js';
-import { calculateCarbonFootprint, getScoreBenchmarks } from '../utils/calculations.js';
+import { CarbonInput, Recommendation, HotspotCategory, PersonalizedReductionPlan } from '../types/index.js';
+import { calculateCarbonFootprint, getScoreBenchmarks, calculateSustainabilityScore } from '../utils/calculations.js';
+
+const EMISSION_FACTORS = {
+  transportation: { car: 0.21, bike: 0, bus: 0.089, train: 0.041 },
+  energy: { electricity: 0.527, ac: 0.65 },
+  food: { vegetarian: 1.5, nonVegetarian: 3.3 },
+  lifestyle: { onlineShopping: 2.5, waste: 1.8 },
+} as const;
 
 interface OpenRouterResponse {
   choices?: Array<{
@@ -26,6 +33,52 @@ Rules:
 - Keep responses under 200 words
 - Use bullet points for multiple tips
 - Use correct spelling — no spelling mistakes or gibberish words`;
+
+function calculateHotspots(carbonData: CarbonInput): HotspotCategory[] {
+  const result = calculateCarbonFootprint(carbonData);
+  const categories: HotspotCategory[] = [
+    { name: 'Transportation', value: result.transportation, percentage: 0 },
+    { name: 'Energy', value: result.energy, percentage: 0 },
+    { name: 'Food', value: result.food, percentage: 0 },
+    { name: 'Lifestyle', value: result.lifestyle, percentage: 0 },
+  ];
+  const total = result.total || 1;
+  return categories.map((c) => ({ ...c, percentage: (c.value / total) * 100 })).sort((a, b) => b.value - a.value);
+}
+
+function buildDeepReductionPlan(carbonData: CarbonInput): PersonalizedReductionPlan {
+  const hotspots = calculateHotspots(carbonData);
+  const highest = hotspots[0];
+  const total = calculateCarbonFootprint(carbonData).total;
+
+  let categorySavings = 0;
+  if (highest.name === 'Transportation') {
+    const input = carbonData.transportation;
+    const carSave = input.carDistance * 0.21 * 0.3 * 30;
+    const transitSave = input.carDistance * 0.21 * 0.6 * 30;
+    categorySavings = Math.max(carSave, transitSave);
+  } else if (highest.name === 'Energy') {
+    const input = carbonData.energy;
+    categorySavings = Math.max(input.electricityUsage * 0.527 * 0.3, input.acUsage * 0.65 * 0.25);
+  } else if (highest.name === 'Food') {
+    const input = carbonData.food;
+    const nonVegSave = input.nonVegetarianMeals * 1.8 * 4;
+    categorySavings = nonVegSave;
+  } else if (highest.name === 'Lifestyle') {
+    const input = carbonData.lifestyle;
+    categorySavings = Math.max(input.onlineShoppingFrequency * 2.5 * 0.5, input.wasteGeneration * 1.8 * 0.6 * 4);
+  }
+
+  const reductionPercent = total > 0 ? (categorySavings / total) * 100 : 0;
+
+  return {
+    highestCategory: highest,
+    categorySavings: Math.round(categorySavings * 10) / 10,
+    totalFootprint: Math.round(total * 10) / 10,
+    reductionPercent: Math.round(reductionPercent * 10) / 10,
+    recommendations: [],
+  };
+}
 
 function buildPrompt(message: string, carbonData?: CarbonInput): { system: string; context: string } {
   let context = '';
@@ -269,20 +322,38 @@ function hotspotAnalysis(carbonData: CarbonInput): string {
 function buildPersonalizedReductionPlan(carbonData: CarbonInput): string {
   const result = calculateCarbonFootprint(carbonData);
   const recs = generateRecommendations(carbonData);
+  const plan = buildDeepReductionPlan(carbonData);
 
   let response = buildDataSummary(carbonData);
 
-  const categories = [
-    { name: 'Transportation', value: result.transportation },
-    { name: 'Energy', value: result.energy },
-    { name: 'Food', value: result.food },
-    { name: 'Lifestyle', value: result.lifestyle },
-  ];
-  categories.sort((a, b) => b.value - a.value);
-  const biggest = categories[0];
-  const bigPct = result.total > 0 ? ((biggest.value / result.total) * 100).toFixed(0) : '0';
+  const { highestCategory, categorySavings, totalFootprint, reductionPercent } = plan;
 
-  response += `\nAapka sabse bada impact area hai **${biggest.name}** (${bigPct}% of total). Pehle yahan focus karein.`;
+  response += `\n\n**🎯 Deep Impact Analysis (Aapke liye exact savings)**`;
+
+  response += `\n\nAapka sabse bada hotspot hai **${highestCategory.name}** — jo **${highestCategory.percentage.toFixed(0)}%** (${highestCategory.value.toFixed(1)} kg) contribute kar raha hai total ${totalFootprint} kg CO₂/month mein se.`;
+
+  response += `\n\n📊 **Exact Calculation:**`;
+  response += `\n• **Current ${highestCategory.name} emissions**: ${highestCategory.value.toFixed(1)} kg CO₂/month`;
+  response += `\n• **Target reduction (30% of hotspot)**: ${(highestCategory.value * 0.3).toFixed(1)} kg CO₂/month`;
+  response += `\n• **Instant savings by focusing on ${highestCategory.name}**: ${categorySavings} kg CO₂/month`;
+  response += `\n• **Overall footprint reduction**: ~${reductionPercent}%`;
+  response += `\n• **Equivalent to**: ${treesEquivalency(categorySavings)}`;
+
+  if (highestCategory.name === 'Transportation') {
+    const km = carbonData.transportation.carDistance;
+    response += `\n\n💡 **Action Plan**: Reducing your car travel from ${km} km/day to ${Math.round(km * 0.7)} km/day (${Math.round(km * 0.3)} km less) will instantly save **${(km * 0.21 * 0.3 * 30).toFixed(1)} kg CO₂/month**.`;
+  } else if (highestCategory.name === 'Energy') {
+    const kwh = carbonData.energy.electricityUsage;
+    response += `\n\n💡 **Action Plan**: Reducing electricity from ${kwh} kWh to ${Math.round(kwh * 0.8)} kWh/month saves **${(kwh * 0.527 * 0.2).toFixed(1)} kg CO₂/month**. AC at 24°C instead of 18°C saves additional **${(carbonData.energy.acUsage * 0.65 * 0.25).toFixed(1)} kg CO₂/month**.`;
+  } else if (highestCategory.name === 'Food') {
+    const nv = carbonData.food.nonVegetarianMeals;
+    const replaceCount = Math.min(5, Math.round(nv * 0.4));
+    response += `\n\n💡 **Action Plan**: Replacing ${replaceCount} non-vegetarian meals with vegetarian options per week saves **${(replaceCount * 1.8 * 4).toFixed(1)} kg CO₂/month**.`;
+  } else if (highestCategory.name === 'Lifestyle') {
+    const shop = carbonData.lifestyle.onlineShoppingFrequency;
+    response += `\n\n💡 **Action Plan**: Reducing online shopping from ${shop} to ${Math.max(0, shop - 2)} orders/month saves **${(Math.min(shop, 2) * 2.5 * 0.5).toFixed(1)} kg CO₂/month**. Composting waste adds **${(carbonData.lifestyle.wasteGeneration * 1.8 * 0.6 * 4).toFixed(1)} kg more savings**.`;
+  }
+
   response += hotspotAnalysis(carbonData);
 
   if (recs.length > 0) {
@@ -291,8 +362,8 @@ function buildPersonalizedReductionPlan(carbonData: CarbonInput): string {
       response += `\n${i + 1}. **${rec.category}**: ${rec.suggestion}\n   - Lagbhag ~${rec.savings.toFixed(0)} kg CO₂/month bacha sakte hain (${rec.impact} impact)`;
     });
     const totalSavings = recs.reduce((s, r) => s + r.savings, 0);
-    response += `\n\nTotal potential savings: **${totalSavings.toFixed(0)} kg CO₂/month** (${result.total > 0 ? ((totalSavings / result.total) * 100).toFixed(0) : 0}% reduction possible!)`;
-    response += `\n${treesEquivalency(totalSavings)}`;
+    response += `\n\n**💰 Total potential savings: ${totalSavings.toFixed(0)} kg CO₂/month** (${result.total > 0 ? ((totalSavings / result.total) * 100).toFixed(0) : 0}% reduction possible!)`;
+    response += `\n🌿 ${treesEquivalency(totalSavings)}`;
   } else {
     response += '\nAap already bahut accha kar rahe hain! Aise hi sustainable habits maintain karein.';
   }
@@ -350,12 +421,14 @@ export async function generateCoachResponse(
     const total = result.total;
     const pct = total > 0 ? ((biggest.value / total) * 100).toFixed(1) : '0';
 
+    const plan = buildDeepReductionPlan(carbonData);
     let response = buildDataSummary(carbonData);
     response += hotspotAnalysis(carbonData);
-    response += `\nAapka sabse bada impact area hai **${biggest.name}** — jo **${pct}%** total emissions contribute kar raha hai (${biggest.value.toFixed(1)} kg CO₂).`;
-    const saving20 = biggest.value * 0.2;
-    response += `\n\nAgar ${biggest.name.toLowerCase()} sirf 20% bhi reduce karein, to aap ~${saving20.toFixed(1)} kg CO₂/month bacha sakte hain.`;
-    response += `\n${treesEquivalency(saving20)}`;
+    response += `\nAapka sabse bada impact area hai **${plan.highestCategory.name}** — jo **${plan.highestCategory.percentage.toFixed(1)}%** total emissions contribute kar raha hai (${plan.highestCategory.value.toFixed(1)} kg CO₂).`;
+    response += `\n\n📊 **Exact savings calculation:**`;
+    response += `\n• Reduce ${plan.highestCategory.name} by 30% → save **${plan.categorySavings} kg CO₂/month**`;
+    response += `\n• That's a **${plan.reductionPercent}%** reduction of your total footprint!`;
+    response += `\n🌿 ${treesEquivalency(plan.categorySavings)}`;
     return response;
   }
 

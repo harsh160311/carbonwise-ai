@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import type { CarbonInput } from '../types';
+import { useState, useCallback, useMemo } from 'react';
+import type { CarbonInput, CarbonResult } from '../types';
 import { TransportForm } from '../components/calculator/TransportForm';
 import { EnergyForm } from '../components/calculator/EnergyForm';
 import { FoodForm } from '../components/calculator/FoodForm';
@@ -25,7 +25,7 @@ export function Calculator() {
   const [showResults, setShowResults] = useState(false);
   const { addEntry } = useCarbonData();
 
-  const result = calculateCarbonFootprint(input);
+  const result = useMemo((): CarbonResult => calculateCarbonFootprint(input), [input]);
 
   const updateField = useCallback(
     <K extends keyof CarbonInput>(

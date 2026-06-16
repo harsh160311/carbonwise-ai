@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { CarbonResult } from '../../types';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -7,7 +8,7 @@ interface CalculatorResultsProps {
   result: CarbonResult;
 }
 
-export function CalculatorResults({ result }: CalculatorResultsProps) {
+export const CalculatorResults = memo(function CalculatorResults({ result }: CalculatorResultsProps) {
   const categories = [
     { label: 'Transportation', value: result.transportation, color: 'bg-blue-500' },
     { label: 'Energy', value: result.energy, color: 'bg-amber-500' },
@@ -68,4 +69,4 @@ export function CalculatorResults({ result }: CalculatorResultsProps) {
       </div>
     </Card>
   );
-}
+});

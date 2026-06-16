@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { LifestyleInput } from '../../types';
 import { InputField } from '../ui/InputField';
 
@@ -6,7 +7,7 @@ interface LifestyleFormProps {
   onChange: (field: keyof LifestyleInput, value: number) => void;
 }
 
-export function LifestyleForm({ data, onChange }: LifestyleFormProps) {
+export const LifestyleForm = memo(function LifestyleForm({ data, onChange }: LifestyleFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-base font-semibold text-slate-800">Lifestyle</h3>
@@ -39,4 +40,4 @@ export function LifestyleForm({ data, onChange }: LifestyleFormProps) {
       </div>
     </div>
   );
-}
+});

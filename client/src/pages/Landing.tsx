@@ -50,6 +50,22 @@ const features = [
     color: 'text-rose-500',
     bg: 'bg-rose-50',
   },
+  {
+    title: 'Plastic Footprint',
+    description:
+      'Analyze your plastic waste impact with AI-powered reduction strategies and sustainable alternatives.',
+    icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
+    color: 'text-sky-500',
+    bg: 'bg-sky-50',
+  },
+  {
+    title: 'Event Planner',
+    description:
+      'Plan sustainable events with AI-driven carbon estimates and eco-friendly vendor suggestions.',
+    icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+    color: 'text-teal-500',
+    bg: 'bg-teal-50',
+  },
 ];
 
 export function Landing() {
@@ -88,6 +104,7 @@ export function Landing() {
               <button
                 onClick={() => navigate('/calculator')}
                 className={btnPrimary}
+                aria-label="Calculate your carbon footprint"
               >
                 Calculate Your Footprint
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -97,6 +114,7 @@ export function Landing() {
               <button
                 onClick={() => navigate('/ai-coach')}
                 className={btnOutline}
+                aria-label="Talk to AI Sustainability Coach"
               >
                 Talk to AI Coach
               </button>

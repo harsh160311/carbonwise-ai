@@ -85,3 +85,61 @@ export interface SustainabilityScoreResult {
   category: ScoreCategory;
   explanation: string;
 }
+
+export interface PlasticInput {
+  plasticBags: number;
+  plasticBottles: number;
+  straws: number;
+  packaging: number;
+  otherPlastic: number;
+}
+
+export interface PlasticResult {
+  totalPlasticKg: number;
+  co2Equivalent: number;
+  recyclablePercent: number;
+  oceanBoundPercent: number;
+  savings: number;
+}
+
+export interface EventInput {
+  eventType: 'wedding' | 'conference' | 'party' | 'corporate' | 'other';
+  guestCount: number;
+  duration: number;
+  venueType: 'indoor' | 'outdoor' | 'hybrid';
+  cateringType: 'vegetarian' | 'non-vegetarian' | 'mixed' | 'vegan';
+  wasteManagement: 'none' | 'basic' | 'recycling' | 'composting' | 'zero-waste';
+}
+
+export interface EventResult {
+  totalEmissions: number;
+  travelEmissions: number;
+  cateringEmissions: number;
+  energyEmissions: number;
+  wasteEmissions: number;
+  offsetCost: number;
+}
+
+export interface CarbonCreditProject {
+  id: string;
+  name: string;
+  type: 'reforestation' | 'renewable' | 'efficiency' | 'ocean' | 'community';
+  description: string;
+  pricePerTon: number;
+  rating: number;
+  location: string;
+}
+
+export interface HotspotCategory {
+  name: string;
+  value: number;
+  percentage: number;
+}
+
+export interface PersonalizedReductionPlan {
+  highestCategory: HotspotCategory;
+  categorySavings: number;
+  totalFootprint: number;
+  reductionPercent: number;
+  recommendations: Recommendation[];
+}

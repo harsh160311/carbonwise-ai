@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { CarbonResult } from '../../types';
 import { formatEmissions } from '../../utils/format';
 
@@ -7,7 +8,7 @@ interface FootprintSummaryProps {
   improvementPercentage: number;
 }
 
-export function FootprintSummary({
+export const FootprintSummary = memo(function FootprintSummary({
   result,
   weeklyTotal,
   improvementPercentage,
@@ -58,4 +59,4 @@ export function FootprintSummary({
       ))}
     </div>
   );
-}
+});

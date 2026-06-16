@@ -42,6 +42,7 @@ export function Button({
     <button
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       disabled={disabled || isLoading}
+      aria-busy={isLoading ? 'true' : undefined}
       {...props}
     >
       {isLoading && (

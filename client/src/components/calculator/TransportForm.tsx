@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { TransportationInput } from '../../types';
 import { InputField } from '../ui/InputField';
 
@@ -6,7 +7,7 @@ interface TransportFormProps {
   onChange: (field: keyof TransportationInput, value: number) => void;
 }
 
-export function TransportForm({ data, onChange }: TransportFormProps) {
+export const TransportForm = memo(function TransportForm({ data, onChange }: TransportFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-base font-semibold text-slate-800">
@@ -59,4 +60,4 @@ export function TransportForm({ data, onChange }: TransportFormProps) {
       </div>
     </div>
   );
-}
+});

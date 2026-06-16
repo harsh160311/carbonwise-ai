@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { FoodInput } from '../../types';
 import { InputField } from '../ui/InputField';
 
@@ -6,7 +7,7 @@ interface FoodFormProps {
   onChange: (field: keyof FoodInput, value: number) => void;
 }
 
-export function FoodForm({ data, onChange }: FoodFormProps) {
+export const FoodForm = memo(function FoodForm({ data, onChange }: FoodFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-base font-semibold text-slate-800">Food</h3>
@@ -39,4 +40,4 @@ export function FoodForm({ data, onChange }: FoodFormProps) {
       </div>
     </div>
   );
-}
+});

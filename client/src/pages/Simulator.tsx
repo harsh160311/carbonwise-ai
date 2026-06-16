@@ -1,13 +1,36 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCarbonData } from '../hooks/useCarbonData';
 import { useSimulator } from '../hooks/useSimulator';
 import { SimulatorControls } from '../components/simulator/SimulatorControls';
 import { SimulationResults } from '../components/simulator/SimulationResults';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import type { CarbonInput } from '../types';
+import type { CarbonInput, CarbonResult } from '../types';
+
+function EmptySimulatorState({ onNavigate }: { onNavigate: () => void }) {
+  return (
+    <Card className="mb-8">
+      <div className="flex flex-col items-center py-12 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
+          <svg className="h-8 w-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </div>
+        <h2 className="mb-2 text-xl font-semibold text-slate-800">No Data to Simulate</h2>
+        <p className="mb-6 max-w-md text-slate-500">
+          Calculate your carbon footprint first to use the simulator with your actual data and see how lifestyle changes affect your emissions.
+        </p>
+        <Button size="lg" onClick={onNavigate} aria-label="Go to calculator to calculate your carbon footprint">
+          Go to Calculator
+        </Button>
+      </div>
+    </Card>
+  );
+}
 
 export function Simulator() {
+  const navigate = useNavigate();
   const { latestEntry } = useCarbonData();
   const { input, currentResult, savings, savingsPercentage, updateField, resetToInput } =
     useSimulator(latestEntry?.input);
@@ -17,6 +40,11 @@ export function Simulator() {
       resetToInput(latestEntry.input);
     }
   }, [latestEntry?.input, resetToInput]);
+
+  const memoResult = useMemo((): CarbonResult => currentResult, [currentResult]);
+  const memoSavings = useMemo(() => savings, [savings]);
+  const memoSavingsPercent = useMemo((): number => savingsPercentage, [savingsPercentage]);
+  const memoInput = useMemo((): CarbonInput => input, [input]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -29,35 +57,26 @@ export function Simulator() {
         </p>
       </div>
 
-      {!latestEntry && (
-        <Card className="mb-8">
-          <div className="py-8 text-center">
-            <p className="mb-4 text-slate-500">
-              Calculate your carbon footprint first to use the simulator with your actual data.
-            </p>
-            <Button onClick={() => window.location.href = '/calculator'}>
-              Go to Calculator
-            </Button>
-          </div>
-        </Card>
-      )}
+      {!latestEntry && <EmptySimulatorState onNavigate={() => navigate('/calculator')} />}
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <Card>
             <SimulatorControls
-              input={input}
-              onFieldChange={(category, field, value) =>
-                updateField(category as keyof CarbonInput, field as never, value)
-              }
+              input={memoInput}
+              onFieldChange={(category, field, value) => {
+                const cat = category as keyof CarbonInput;
+                const typedField = field as keyof CarbonInput[typeof cat];
+                updateField(cat, typedField, value);
+              }}
             />
           </Card>
         </div>
         <div className="lg:col-span-2">
           <SimulationResults
-            currentResult={currentResult}
-            savings={savings}
-            savingsPercentage={savingsPercentage}
+            currentResult={memoResult}
+            savings={memoSavings}
+            savingsPercentage={memoSavingsPercent}
           />
         </div>
       </div>

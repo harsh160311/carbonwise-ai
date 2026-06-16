@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Slider } from '../ui/Slider';
 import type { CarbonInput } from '../../types';
 
@@ -10,7 +11,7 @@ interface SimulatorControlsProps {
   ) => void;
 }
 
-export function SimulatorControls({
+export const SimulatorControls = memo(function SimulatorControls({
   input,
   onFieldChange,
 }: SimulatorControlsProps) {
@@ -151,4 +152,4 @@ export function SimulatorControls({
       </div>
     </div>
   );
-}
+});

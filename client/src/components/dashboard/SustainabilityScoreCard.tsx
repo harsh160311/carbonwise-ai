@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { getScoreCategory, getScoreExplanation } from '../../utils/sustainabilityScore';
@@ -7,7 +8,7 @@ interface SustainabilityScoreCardProps {
   score: number;
 }
 
-export function SustainabilityScoreCard({ score }: SustainabilityScoreCardProps) {
+export const SustainabilityScoreCard = memo(function SustainabilityScoreCard({ score }: SustainabilityScoreCardProps) {
   const { category, color, description } = getScoreCategory(score);
   const explanation = getScoreExplanation(score);
 
@@ -44,4 +45,4 @@ export function SustainabilityScoreCard({ score }: SustainabilityScoreCardProps)
       </p>
     </Card>
   );
-}
+});

@@ -63,6 +63,7 @@ export function ChallengeCard({ challenge, onUpdate }: ChallengeCardProps) {
               challenge.completed ? 0 : 100,
             )
           }
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onUpdate(challenge.id, !challenge.completed, challenge.completed ? 0 : 100); } }}
           className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
             challenge.completed
               ? 'border-emerald-500 bg-emerald-50 text-emerald-600'
@@ -73,6 +74,9 @@ export function ChallengeCard({ challenge, onUpdate }: ChallengeCardProps) {
               ? `Mark ${challenge.title} as incomplete`
               : `Mark ${challenge.title} as complete`
           }
+          tabIndex={0}
+          role="switch"
+          aria-checked={challenge.completed}
         >
           {challenge.completed ? (
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

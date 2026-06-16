@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { EnergyInput } from '../../types';
 import { InputField } from '../ui/InputField';
 
@@ -6,7 +7,7 @@ interface EnergyFormProps {
   onChange: (field: keyof EnergyInput, value: number) => void;
 }
 
-export function EnergyForm({ data, onChange }: EnergyFormProps) {
+export const EnergyForm = memo(function EnergyForm({ data, onChange }: EnergyFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-base font-semibold text-slate-800">Energy</h3>
@@ -37,4 +38,4 @@ export function EnergyForm({ data, onChange }: EnergyFormProps) {
       </div>
     </div>
   );
-}
+});

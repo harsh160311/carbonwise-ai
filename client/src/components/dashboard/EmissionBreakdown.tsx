@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import {
   PieChart,
   Pie,
@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   lifestyle: 'Lifestyle',
 };
 
-export function EmissionBreakdown({ result }: EmissionBreakdownProps) {
+export const EmissionBreakdown = memo(function EmissionBreakdown({ result }: EmissionBreakdownProps) {
   const data = useMemo(
     () =>
       Object.entries(result)
@@ -60,7 +60,8 @@ export function EmissionBreakdown({ result }: EmissionBreakdownProps) {
               paddingAngle={3}
               dataKey="value"
               animationBegin={0}
-              animationDuration={1000}
+              animationDuration={300}
+              isAnimationActive={false}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -101,4 +102,4 @@ export function EmissionBreakdown({ result }: EmissionBreakdownProps) {
       </div>
     </Card>
   );
-}
+});

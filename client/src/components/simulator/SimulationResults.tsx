@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { CarbonResult } from '../../types';
 import { Card } from '../ui/Card';
 import { formatEmissions } from '../../utils/format';
@@ -8,7 +9,7 @@ interface SimulationResultsProps {
   savingsPercentage: number;
 }
 
-export function SimulationResults({
+export const SimulationResults = memo(function SimulationResults({
   currentResult,
   savings,
   savingsPercentage,
@@ -138,4 +139,4 @@ export function SimulationResults({
       </div>
     </Card>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   BarChart,
   Bar,
@@ -15,7 +16,7 @@ interface MonthlyTrendProps {
   data: MonthlyData[];
 }
 
-export function MonthlyTrend({ data }: MonthlyTrendProps) {
+export const MonthlyTrend = memo(function MonthlyTrend({ data }: MonthlyTrendProps) {
   if (data.length === 0) {
     return (
       <Card>
@@ -92,4 +93,4 @@ export function MonthlyTrend({ data }: MonthlyTrendProps) {
       </div>
     </Card>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   LineChart,
   Line,
@@ -14,7 +15,7 @@ interface WeeklyTrendProps {
   data: WeeklyData[];
 }
 
-export function WeeklyTrend({ data }: WeeklyTrendProps) {
+export const WeeklyTrend = memo(function WeeklyTrend({ data }: WeeklyTrendProps) {
   if (data.length === 0) {
     return (
       <Card>
@@ -81,4 +82,4 @@ export function WeeklyTrend({ data }: WeeklyTrendProps) {
       </div>
     </Card>
   );
-}
+});
